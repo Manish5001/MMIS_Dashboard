@@ -1,78 +1,13 @@
 import { NextResponse } from 'next/server';
-
-const dummyData = [
-  {
-    program: "ADT",
-    status: "LIVE",
-    source: "Shoals",
-    destination: "AR_Registry",
-    received: 100,
-    filtered: 5,
-    submitted: 95,
-    accepted: 90,
-    errored: 3,
-    rejected: 2,
-    total: 100,
-    acceptanceRate: 90,
-  },
-  {
-    program: "ORU",
-    status: "UAT",
-    source: "Pocahontas",
-    destination: "NM_Registry",
-    received: 200,
-    filtered: 10,
-    submitted: 190,
-    accepted: 188,
-    errored: 1,
-    rejected: 1,
-    total: 200,
-    acceptanceRate: 94,
-  },
-  {
-    program: "ORM",
-    status: "LIVE",
-    source: "Holdenville",
-    destination: "FL_Registry",
-    received: 150,
-    filtered: 7,
-    submitted: 143,
-    accepted: 140,
-    errored: 2,
-    rejected: 1,
-    total: 150,
-    acceptanceRate: 93.3,
-  },
-  {
-    program: "LAB",
-    status: "STATE NOT READY",
-    source: "NorthSonoma",
-    destination: "GA_Registry",
-    received: 120,
-    filtered: 2,
-    submitted: 118,
-    accepted: 115,
-    errored: 2,
-    rejected: 1,
-    total: 120,
-    acceptanceRate: 95.8,
-  },
-  {
-    program: "RAD",
-    status: "UAT",
-    source: "Sabine",
-    destination: "AR_Registry",
-    received: 90,
-    filtered: 1,
-    submitted: 89,
-    accepted: 88,
-    errored: 0,
-    rejected: 1,
-    total: 90,
-    acceptanceRate: 97.8,
-  },
-];
+import { getPool } from '../db/lib';
 
 export async function GET() {
-  return NextResponse.json(dummyData);
+  try {
+    const pool = await getPool();
+    // Replace 'StoredProcedureName' with your actual stored procedure
+    const result = await pool.request().execute('StoredProcedureName');
+    return NextResponse.json(result.recordset);
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }
